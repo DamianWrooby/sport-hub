@@ -28,7 +28,7 @@
 					class="form-control-sm"
 					name="distance"
 					id="distance"
-					v-model="editedUnit.distance"
+					v-model.number="editedUnit.distance"
 					required
 				/>
 				metres
@@ -40,7 +40,7 @@
 					class="form-control-sm"
 					name="duration"
 					id="duration"
-					v-model="editedUnit.duration"
+					v-model.number="editedUnit.duration"
 					required
 				/>
 				minutes
@@ -52,7 +52,7 @@
 					class="form-control-sm"
 					name="intensity"
 					id="intensity"
-					v-model="editedUnit.intensity"
+					v-model.number="editedUnit.intensity"
 					max="100"
 					required
 				/>
@@ -77,12 +77,6 @@
 
 <script>
 export default {
-	data() {
-		return {
-			editedUnit: { ...this.$store.getters.getUnitById(this.itemId) }
-		};
-	},
-
 	props: {
 		itemId: Number
 	},
@@ -91,6 +85,12 @@ export default {
 		onEditFormSubmit() {
 			this.$emit("onSave", this.editedUnit);
 		}
+	},
+
+	computed: {
+		editedUnit() {
+			return { ...this.$store.getters.getUnitById(this.itemId) }
+		} 
 	}
 };
 </script>

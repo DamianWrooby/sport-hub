@@ -1,17 +1,10 @@
 <template>
 	<div class="mb-5">
 		<h2 class="py-4 mt-5">Training units</h2>
-		<div class="row py-4 mb-2 d-flex flex-row justify-content-between">
-			<div class="col"><span>Activity</span></div>
-			<div class="col"><span>Distance</span></div>
-			<div class="col"><span>Duration</span></div>
-			<div class="col"><span>Intensity</span></div>
-			<div class="col"><span>Date</span></div>
-			<div class="col"></div>
-		</div>
+		<units-list-table-head @setSorting="setSorting($event)" />
 		<div
 			class="border rounded rounded-3 row py-4 mb-2 d-flex flex-row justify-content-between"
-			v-for="item in list"
+			v-for="item in sortedUnits"
 			:key="item.id"
 		>
 			<div class="col">
@@ -31,13 +24,29 @@
 			</div>
 			<div class="col">
 				<button class="btn btn-danger btn-sm" @click="onDeleteClick(item.id)">
-					<font-awesome-icon :icon="['fas', 'trash-alt']"/>
+					<font-awesome-icon :icon="icons.delete" />
 				</button>
 				<button class="btn btn-info btn-sm" @click="onEditClick(item.id)">
-					<font-awesome-icon :icon="['fas', 'edit']"/>
+					<font-awesome-icon :icon="icons.edit" />
 				</button>
 			</div>
 		</div>
+		<b-modal
+			id="modal-delete"
+			v-model="showDeleteForm"
+			@ok="onDeleteConfirm(deleteItemId)"
+			centered
+			ok-title="Delete"
+			ok-variant="danger"
+			modal-header="false"
+			size="sm"
+			:body-bg-variant="'dark'"
+			:header-bg-variant="'dark'"
+			:footer-bg-variant="'dark'"
+			hide-header
+		>
+			<p class="my-4 fs-1">Are you sure?</p>
+		</b-modal>
 		<edit-unit-form
 			v-if="showEditForm"
 			:itemId="editItemId"
@@ -48,33 +57,42 @@
 
 <script>
 import EditUnitForm from "./EditUnitForm.vue";
+import UnitsListTableHead from "./UnitsListTableHead.vue";
+import { icons } from "../assets/icons.js";
 
 export default {
 	data() {
 		return {
+			showDeleteForm: false,
+			deleteItemId: null,
 			showEditForm: false,
 			editItemId: null,
-			icons: {
-				running: ["fas", "running"],
-				cycling: ["fas", "biking"],
-				walking: ["fas", "walking"],
-				swimming: ["fas", "swimmer"],
-				hiking: ["fas", "mountain"],
-				gym: ["fas", "dumbbell"],
-			}
+			icons,
 		};
 	},
 
 	components: {
-		EditUnitForm
+		EditUnitForm,
+		UnitsListTableHead,
 	},
 
-	props: {
-		list: Array
+	computed: {
+		allUnits() {
+			return this.$store.getters.getUnits;
+		},
+
+		sortedUnits() {
+			return this.$store.getters.getSortedUnits;
+		}
 	},
 
 	methods: {
 		onDeleteClick(id) {
+			this.showDeleteForm = true;
+			this.deleteItemId = id;
+		},
+
+		onDeleteConfirm(id) {
 			this.$emit("removeUnit", id);
 		},
 
@@ -86,13 +104,11 @@ export default {
 		onEditFormSave(editedItem) {
 			this.$emit("editUnit", editedItem);
 			this.showEditForm = false;
+		},
+
+		setSorting(sortKey) {
+			this.$store.commit("setSorting", sortKey);
 		}
 	}
 };
 </script>
-
-<style>
-.space {
-	width: 250px;
-}
-</style>

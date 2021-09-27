@@ -30,7 +30,7 @@
 					id="distance"
 					value="0"
 					required
-					v-model="newUnit.distance"
+					v-model.number="newUnit.distance"
 				/>
 				metres
 			</div>
@@ -43,7 +43,7 @@
 					id="duration"
 					value="0"
 					required
-					v-model="newUnit.duration"
+					v-model.number="newUnit.duration"
 				/>
 				minutes
 			</div>
@@ -57,7 +57,7 @@
 					value="0"
 					max="100"
 					required
-					v-model="newUnit.intensity"
+					v-model.number="newUnit.intensity"
 				/>
 				%
 			</div>
@@ -91,6 +91,7 @@ export default {
 			}
 		};
 	},
+
 	methods: {
 		getCurrentDate() {
 			let local = new Date();
@@ -110,10 +111,10 @@ export default {
 			let id;
 			do {
 				id = Math.floor(Math.random() * 1000);
-			} while (this.$store.state.trainingUnits.find(el => el.id === id));
+			} while (this.$store.getters.getUnits.find(el => el.id === id));
 			return id;
-		}
-	}
+		},
+	},
 };
 </script>
 

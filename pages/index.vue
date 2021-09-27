@@ -4,7 +4,6 @@
 		<p id="sub-heading">Track your physical activities</p>
 		<add-unit-form @addUnit="addUnit($event)" />
 		<units-list
-			:list="allUnits"
 			@removeUnit="removeUnit($event)"
 			@editUnit="editUnit($event)"
 		/>
@@ -19,12 +18,6 @@ export default {
 	components: {
 		AddUnitForm,
 		UnitsList
-	},
-
-	computed: {
-		allUnits() {
-			return this.$store.getters.getUnits;
-		}
 	},
 
 	methods: {
