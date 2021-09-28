@@ -51,6 +51,7 @@
 			v-if="showEditForm"
 			:itemId="editItemId"
 			@onSave="onEditFormSave($event)"
+			@backdropClicked="showEditForm = false"
 		/>
 	</div>
 </template>
