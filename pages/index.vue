@@ -2,7 +2,7 @@
 	<div class="container text-center">
 		<h1 id="main-heading">Training Tracker</h1>
 		<p id="sub-heading">Track your physical activities</p>
-		<add-unit-form @addUnit="addUnit($event)" />
+		<units-list-add-form @addUnit="addUnit($event)" />
 		<units-list
 			@removeUnit="removeUnit($event)"
 			@editUnit="editUnit($event)"
@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import AddUnitForm from "../components/AddUnitForm.vue";
+import UnitsListAddForm from "../components/UnitsListAddForm.vue";
 import UnitsList from "../components/UnitsList.vue";
 
 export default {
 	components: {
-		AddUnitForm,
+		UnitsListAddForm,
 		UnitsList
 	},
 

@@ -47,7 +47,7 @@
 		>
 			<p class="my-4 fs-1">Are you sure?</p>
 		</b-modal>
-		<edit-unit-form
+		<units-list-edit-form
 			v-if="showEditForm"
 			:itemId="editItemId"
 			@onSave="onEditFormSave($event)"
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import EditUnitForm from "./EditUnitForm.vue";
+import UnitsListEditForm from "./UnitsListEditForm.vue";
 import UnitsListTableHead from "./UnitsListTableHead.vue";
 import { icons } from "../assets/icons.js";
 
@@ -72,7 +72,7 @@ export default {
 	},
 
 	components: {
-		EditUnitForm,
+		UnitsListEditForm,
 		UnitsListTableHead,
 	},
 

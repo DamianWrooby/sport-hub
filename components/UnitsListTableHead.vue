@@ -94,9 +94,6 @@ export default {
 }
 
 .arrow {
-	position: absolute;
-	top: 5px;
-	right: 10px;
 	transition: all .2s ease-in-out;
 }
 

@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export const state = () => ({
 	trainingUnits: [
 		{
@@ -36,7 +38,7 @@ export const mutations = {
 
 	editUnit(state, payload) {
 		let index = state.trainingUnits.findIndex(unit => unit.id === payload.id);
-		state.trainingUnits[index] = payload;
+		Vue.set(state.trainingUnits, index, payload);
 	},
 
 	setSorting(state, sortKey) {
