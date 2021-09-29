@@ -125,12 +125,14 @@ export default {
 
 		onBackdropClick() {
 			this.$emit("backdropClicked");
-		},
+		}
 	},
 
 	computed: {
 		editedUnit() {
-			return { ...this.$store.getters.getUnitById(this.itemId) };
+			return JSON.parse(
+				JSON.stringify(this.$store.getters.getUnitById(this.itemId))
+			);
 		}
 	}
 };
@@ -141,9 +143,8 @@ export default {
 	position: fixed;
 	top: 0;
 	left: 0;
-	right: 0;
-	bottom: 0;
-	width: 100%;
+	width: 100vw;
+	height: 100vh;
 	z-index: 99998;
 	background: rgba(0, 0, 0, 0.8);
 }
@@ -159,8 +160,10 @@ export default {
 }
 
 #edit-form {
-	position: relative;
-	transform: translateY(29vh);
+	position: absolute;
+	top: 70%;
+	left: 50%;
+	transform: translate(-50%, 0);
 	max-width: 500px;
 	z-index: 99999;
 	background-color: #2c2538;
