@@ -52,11 +52,11 @@ export const mutations = {
 };
 
 export const getters = {
-	getUnits: state => state.trainingUnits,
+	units: state => state.trainingUnits,
 
-	getUnitById: state => id => [...state.trainingUnits].find(unit => unit.id === id),
+	unit: state => id => [...state.trainingUnits].find(unit => unit.id === id),
 
-	getSortedUnits: state => {
+	sortedUnits: state => {
 		const compareFn = (a, b) =>  (a[state.sortBy] > b[state.sortBy]) ? 1 : ((a[state.sortBy] < b[state.sortBy]) ? -1 : 0);
 		const units = [...state.trainingUnits].sort(compareFn);
 
@@ -67,7 +67,7 @@ export const getters = {
 		return units;
 	},
 
-	getSortingInfo: state => ({
+	sortingInfo: state => ({
 		sortBy: state.sortBy,
 		sortDirection: state.sortDirection
 	}),

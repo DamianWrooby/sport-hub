@@ -81,11 +81,11 @@ export default {
 
 	computed: {
 		allUnits() {
-			return this.$store.getters.getUnits;
+			return this.$store.getters.units;
 		},
 
 		sortedUnits() {
-			return this.$store.getters.getSortedUnits;
+			return this.$store.getters.sortedUnits;
 		}
 	},
 

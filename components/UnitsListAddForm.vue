@@ -147,7 +147,7 @@ export default {
 			let id;
 			do {
 				id = Math.floor(Math.random() * 1000);
-			} while (this.$store.getters.getUnits.find(el => el.id === id));
+			} while (this.$store.getters.units.find(el => el.id === id));
 			return id;
 		}
 	}

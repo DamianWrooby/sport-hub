@@ -77,11 +77,11 @@ export default {
 
 	computed: {
 		sortByInfo() {
-			return this.$store.getters.getSortingInfo.sortBy;
+			return this.$store.getters.sortingInfo.sortBy;
 		},
 
 		sortDirectionInfo() {
-			return this.$store.getters.getSortingInfo.sortDirection;
+			return this.$store.getters.sortingInfo.sortDirection;
 		}
 	}
 };

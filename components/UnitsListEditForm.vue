@@ -131,7 +131,7 @@ export default {
 	computed: {
 		editedUnit() {
 			return JSON.parse(
-				JSON.stringify(this.$store.getters.getUnitById(this.itemId))
+				JSON.stringify(this.$store.getters.unit(this.itemId))
 			);
 		}
 	}
