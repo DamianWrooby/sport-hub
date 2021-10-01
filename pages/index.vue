@@ -1,11 +1,5 @@
 <template>
 	<div class="container text-center">
-		<transition name="heading" appear>
-			<div id="heading">
-				<h1 id="main-heading">Training Tracker</h1>
-				<p id="sub-heading">Track your physical activities</p>
-			</div>
-		</transition>
 		<units-list-add-form @addUnit="addUnit($event)" />
 		<units-list @removeUnit="removeUnit($event)" @editUnit="editUnit($event)" />
 	</div>
@@ -64,19 +58,5 @@ h1#main-heading {
 	top: -58px;
 	letter-spacing: 4px;
 	color: #9a88e4;
-}
-
-.heading-enter-active,
-.heading-leave-active {
-	transition: all 0.5s;
-}
-
-.heading-enter,
-.heading-leave-to {
-	opacity: 0;
-}
-
-.heading-enter {
-	transform: translateY(30px);
 }
 </style>

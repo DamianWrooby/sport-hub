@@ -91,6 +91,7 @@ export default {
 .table-head div {
 	position: relative;
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 .arrow {

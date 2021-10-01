@@ -4,33 +4,54 @@
 		<units-list-table-head @setSorting="setSorting($event)" />
 		<transition-group name="list" tag="ul" appear>
 			<li
-				class="list-item border rounded rounded-3 row py-4 mb-2 d-flex flex-row justify-content-between"
-				v-for="item in sortedUnits"
-				:key="item.id"
+				class="list-item border rounded rounded-3 row mb-2 d-flex flex-row justify-content-between align-items-center"
+				v-for="unit in sortedUnits"
+				:key="unit.id"
 			>
-				<div class="col">
-					<span><font-awesome-icon :size="'2x'" :icon="icons[item.activity]"/></span>
-				</div>
-				<div class="col">
-					<span>{{ item.distance }} m</span>
-				</div>
-				<div class="col">
-					<span>{{ item.duration }} min</span>
-				</div>
-				<div class="col">
-					<span>{{ item.intensity }} %</span>
-				</div>
-				<div class="col">
-					<span>{{ item.date }}</span>
-				</div>
-				<div class="col">
-					<button class="btn btn-danger btn-sm" @click="onDeleteClick(item.id)">
+				<NuxtLink
+					:to="`/units/${unit.id}`"
+					class="unit-link d-flex flex-row align-items-center col-12 py-4 px-0"
+				>
+					<div class="col">
+						<span
+							><font-awesome-icon :size="'2x'" :icon="icons[unit.activity]"
+						/></span>
+					</div>
+					<div class="col">
+						<span>{{ unit.distance }} m</span>
+					</div>
+					<div class="col">
+						<span>{{ unit.duration }} min</span>
+					</div>
+					<div class="col">
+						<span>{{ unit.intensity }} %</span>
+					</div>
+					<div class="col">
+						<span>{{ unit.date }}</span>
+					</div>
+					<div class="col">
+						<button
+							class="btn btn-danger btn-sm"
+							@click.stop.prevent="onDeleteClick(unit.id)"
+						>
+							<font-awesome-icon :icon="icons.delete" />
+						</button>
+						<button class="btn btn-info btn-sm" @click.stop.prevent="onEditClick(unit.id)">
+							<font-awesome-icon :icon="icons.edit" />
+						</button>
+					</div>
+				</NuxtLink>
+				<!-- <div class="btn-container position-absolute">
+					<button class="btn btn-danger btn-sm" @click.stop="onDeleteClick(unit.id)">
 						<font-awesome-icon :icon="icons.delete" />
 					</button>
-					<button class="btn btn-info btn-sm" @click="onEditClick(item.id)">
+					<button class="btn btn-info btn-sm" @click.stop="onEditClick(unit.id)">
 						<font-awesome-icon :icon="icons.edit" />
 					</button>
-				</div>
+				</div> -->
+				<!-- <div class="col">
+						
+					</div> -->
 			</li>
 		</transition-group>
 		<b-modal
@@ -130,6 +151,26 @@ ul {
 	padding: 0;
 }
 
+.list-item {
+	transition: all 0.1s ease-in-out;
+}
+
+.list-item:hover {
+	transform: scale(1.03);
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+.unit-link,
+.unit-link:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+.btn-container {
+	right: 0;
+}
+
+/* Animations */
 .list-enter-active,
 .list-leave-active {
 	transition: all 0.3s ease-in-out;

@@ -135,7 +135,12 @@ export default {
 				local.getMonth() + 1 < 10
 					? `0${local.getMonth() + 1}`
 					: `${local.getMonth() + 1}`;
-			return `${local.getFullYear()}-${month}-${local.getDate()}`;
+			let day =
+				local.getDate() < 10
+					? `0${local.getDate()}`
+					: `${local.getMonth()}`;
+				
+			return `${local.getFullYear()}-${month}-${day}`;
 		},
 
 		onAddFormSubmit() {
