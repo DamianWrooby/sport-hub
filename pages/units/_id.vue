@@ -4,6 +4,7 @@
 		<p>Duration: {{ unit.duration }} min</p>
 		<p>Distance: {{ unit.distance }} m</p>
 		<p>Intensity: {{ unit.intensity }} %</p>
+		<p>Description: {{ unit.description }}</p>
 	</div>
 </template>
 
@@ -17,7 +18,7 @@ export default {
 
 	computed: {
 		unit() {
-			return this.$store.getters.unit(this.id);
+			return this.$store.getters.savedUnit(this.id);
 		}
 	}
 };

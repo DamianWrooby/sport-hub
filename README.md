@@ -1,4 +1,4 @@
-# nuxt-app-1
+# Training Trucker
 
 ## Build Setup
 

@@ -1,57 +1,57 @@
 <template>
 	<div class="row py-4 mb-2 d-flex flex-row justify-content-between table-head">
-		<div class="col" @click="onHeadingClick('activity')" :class="{'fw-bold': sortByInfo === 'activity'}">
+		<div class="col" @click="onHeadingClick('activity')" :class="{'fw-bold': sortBy === 'activity'}">
 			<span>Activity</span>
 			<font-awesome-icon
 				v-show="
-					sortByInfo === 'activity'
+					sortBy === 'activity'
 				"
 				:icon="icons.angleUp"
-				:class="{down: sortByInfo === 'activity' && sortDirectionInfo === 'desc'}"
+				:class="{down: sortBy === 'activity' && sortDirection === 'desc'}"
 				class="arrow"
 			/>
 		</div>
-		<div class="col" @click="onHeadingClick('distance')" :class="{'fw-bold': sortByInfo === 'distance'}">
+		<div class="col" @click="onHeadingClick('distance')" :class="{'fw-bold': sortBy === 'distance'}">
 			<span>Distance</span>
 			<font-awesome-icon
 				v-show="
-					sortByInfo === 'distance'
+					sortBy === 'distance'
 				"
 				:icon="icons.angleUp"
-				:class="{down: sortByInfo === 'distance' && sortDirectionInfo === 'desc'}"
+				:class="{down: sortBy === 'distance' && sortDirection === 'desc'}"
 				class="arrow"
 			/>
 		</div>
-		<div class="col" @click="onHeadingClick('duration')" :class="{'fw-bold': sortByInfo === 'duration'}">
+		<div class="col" @click="onHeadingClick('duration')" :class="{'fw-bold': sortBy === 'duration'}">
 			<span>Duration</span>
 			<font-awesome-icon
 				v-show="
-					sortByInfo === 'duration'
+					sortBy === 'duration'
 				"
 				:icon="icons.angleUp"
-				:class="{down: sortByInfo === 'duration' && sortDirectionInfo === 'desc'}"
+				:class="{down: sortBy === 'duration' && sortDirection === 'desc'}"
 				class="arrow"
 			/>
 		</div>
-		<div class="col" @click="onHeadingClick('intensity')" :class="{'fw-bold': sortByInfo === 'intensity'}">
+		<div class="col" @click="onHeadingClick('intensity')" :class="{'fw-bold': sortBy === 'intensity'}">
 			<span>Intensity</span>
 			<font-awesome-icon
 				v-show="
-					sortByInfo === 'intensity'
+					sortBy === 'intensity'
 				"
 				:icon="icons.angleUp"
-				:class="{down: sortByInfo === 'intensity' && sortDirectionInfo === 'desc'}"
+				:class="{down: sortBy === 'intensity' && sortDirection === 'desc'}"
 				class="arrow"
 			/>
 		</div>
-		<div class="col" @click="onHeadingClick('timestamp')" :class="{'fw-bold': sortByInfo === 'timestamp'}">
+		<div class="col" @click="onHeadingClick('timestamp')" :class="{'fw-bold': sortBy === 'timestamp'}">
 			<span>Date</span>
 			<font-awesome-icon
 				v-show="
-					sortByInfo === 'timestamp'
+					sortBy === 'timestamp'
 				"
 				:icon="icons.angleUp"
-				:class="{down: sortByInfo === 'timestamp' && sortDirectionInfo === 'desc'}"
+				:class="{down: sortBy === 'timestamp' && sortDirection === 'desc'}"
 				class="arrow"
 			/>
 		</div>
@@ -63,6 +63,11 @@
 import { icons } from "../assets/icons.js";
 
 export default {
+	props: {
+		sortBy: String,
+		sortDirection: String
+	},
+
 	data() {
 		return {
 			icons
@@ -74,16 +79,6 @@ export default {
 			this.$emit("setSorting", sortKey);
 		}
 	},
-
-	computed: {
-		sortByInfo() {
-			return this.$store.getters.sortingInfo.sortBy;
-		},
-
-		sortDirectionInfo() {
-			return this.$store.getters.sortingInfo.sortDirection;
-		}
-	}
 };
 </script>
 

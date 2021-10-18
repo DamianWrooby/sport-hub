@@ -83,6 +83,23 @@
 						<p class="text-danger error-message">{{ errors[0] }}</p>
 					</ValidationProvider>
 				</div>
+				<div class="mb-2 text-left col-9 mx-auto">
+					<ValidationProvider
+						v-slot="{ errors, invalid }"
+						class="d-flex flex-column"
+					>
+						<label for="description">Description:</label>
+						<textarea
+							rows="3"
+							cols="33"
+							:class="{ 'border-danger': invalid, 'bg-danger': invalid }"
+							name="description"
+							id="description"
+							v-model="editedUnit.description"
+						/>
+						<p class="text-danger error-message">{{ errors[0] }}</p>
+					</ValidationProvider>
+				</div>
 				<div class="mb-3 text-left col-9 mx-auto">
 					<ValidationProvider rules="required" v-slot="{ errors, invalid }">
 						<label for="date">Date:</label>
@@ -130,9 +147,7 @@ export default {
 
 	computed: {
 		editedUnit() {
-			return JSON.parse(
-				JSON.stringify(this.$store.getters.unit(this.itemId))
-			);
+			return JSON.parse(JSON.stringify(this.$store.getters.savedUnit(this.itemId)));
 		}
 	}
 };
@@ -161,9 +176,9 @@ export default {
 
 #edit-form {
 	position: absolute;
-	top: 70%;
+	top: 50%;
 	left: 50%;
-	transform: translate(-50%, 0);
+	transform: translate(-50%, 10%);
 	max-width: 500px;
 	z-index: 99999;
 	background-color: #2c2538;

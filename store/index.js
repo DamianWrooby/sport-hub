@@ -1,74 +1,54 @@
-import Vue from 'vue';
+import Vue from "vue";
 
 export const state = () => ({
-	trainingUnits: [
-		{
-			id: 1,
-			activity: "running",
-			distance: 10,
-			duration: 60,
-			intensity: 70,
-			date: "2021-09-24",
-			timestamp: 1632434400000
-		},
-		{
-			id: 2,
-			activity: "swimming",
-			distance: 3,
-			duration: 30,
-			intensity: 50,
-			date: "2021-09-24",
-			timestamp: 1632434410000
-		}
-	],
-	sortBy: "timestamp",
-	sortDirection: "asc"
+	savedUnits: [],
+	scheduledUnits: [],
+	isLoading: false
 });
 
-export const mutations = {
-	addUnit(state, payload) {
-		let dateArr = payload.date.split('-');
-		let timestamp = new Date(Number(dateArr[0]), Number(dateArr[1]) - 1, Number(dateArr[2]), 0, 0 ,0).getTime();
-		state.trainingUnits.push({...payload, timestamp });
-	},
-
-	removeUnit(state, id) {
-		state.trainingUnits = state.trainingUnits.filter(el => el.id !== id);
-	},
-
-	editUnit(state, payload) {
-		let index = state.trainingUnits.findIndex(unit => unit.id === payload.id);
-		Vue.set(state.trainingUnits, index, payload);
-	},
-
-	setSorting(state, sortKey) {
-		if (state.sortBy === sortKey) {
-			state.sortDirection = state.sortDirection === "asc" ? "desc" : "asc";
-		} else {
-			state.sortBy = sortKey;
-			state.sortDirection = "asc";
+export const actions = {
+	async fetchUnits({ commit }) {
+		commit("FETCH_START");
+		try {
+			const res = await fetch("/api/saved-units");
+			const units = await res.json();
+			commit("FETCH_END", units);
+		} catch (err) {
+			console.log(err);
 		}
 	}
 };
 
+export const mutations = {
+	FETCH_START(state) {
+		state.isLoading = true;
+	},
+	
+	FETCH_END(state, units) {
+		state.savedUnits = units;
+		state.isLoading = false;
+	}
+};
+
 export const getters = {
-	units: state => state.trainingUnits,
+	savedUnits: state => state.savedUnits,
 
-	unit: state => id => [...state.trainingUnits].find(unit => unit.id === id),
+	savedUnit: state => id => [...state.savedUnits].find(unit => unit.id === id),
 
-	sortedUnits: state => {
-		const compareFn = (a, b) =>  (a[state.sortBy] > b[state.sortBy]) ? 1 : ((a[state.sortBy] < b[state.sortBy]) ? -1 : 0);
-		const units = [...state.trainingUnits].sort(compareFn);
+	sortedSavedUnits: state => (sortBy, sortDirection) => {
+		const compareFn = (a, b) =>
+			a[sortBy] > b[sortBy] ? 1 : a[sortBy] < b[sortBy] ? -1 : 0;
+		const units = [...state.savedUnits].sort(compareFn);
 
-		if (state.sortDirection === "desc") {
+		if (sortDirection === "desc") {
 			units.reverse();
 		}
-		
+
 		return units;
 	},
 
-	sortingInfo: state => ({
-		sortBy: state.sortBy,
-		sortDirection: state.sortDirection
-	}),
+	scheduledUnits: state => state.scheduledUnits,
+
+	scheduledUnit: state => dayID =>
+		[...state.scheduledUnits].find(unit => unit.dayID === dayID)
 };

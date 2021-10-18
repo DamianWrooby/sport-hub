@@ -1,7 +1,7 @@
 <template>
 	<div class="mb-5">
 		<h2 class="py-4 mt-5">Training units</h2>
-		<units-list-table-head @setSorting="setSorting($event)" />
+		<units-list-table-head :sortBy="sortBy" :sortDirection="sortDirection" @setSorting="setSorting($event)" />
 		<transition-group name="list" tag="ul" appear>
 			<li
 				class="list-item border rounded rounded-3 row mb-2 d-flex flex-row justify-content-between align-items-center"
@@ -36,22 +36,14 @@
 						>
 							<font-awesome-icon :icon="icons.delete" />
 						</button>
-						<button class="btn btn-info btn-sm" @click.stop.prevent="onEditClick(unit.id)">
+						<button
+							class="btn btn-info btn-sm"
+							@click.stop.prevent="onEditClick(unit.id)"
+						>
 							<font-awesome-icon :icon="icons.edit" />
 						</button>
 					</div>
 				</NuxtLink>
-				<!-- <div class="btn-container position-absolute">
-					<button class="btn btn-danger btn-sm" @click.stop="onDeleteClick(unit.id)">
-						<font-awesome-icon :icon="icons.delete" />
-					</button>
-					<button class="btn btn-info btn-sm" @click.stop="onEditClick(unit.id)">
-						<font-awesome-icon :icon="icons.edit" />
-					</button>
-				</div> -->
-				<!-- <div class="col">
-						
-					</div> -->
 			</li>
 		</transition-group>
 		<b-modal
@@ -91,6 +83,8 @@ export default {
 			deleteItemId: null,
 			showEditForm: false,
 			editItemId: null,
+			sortBy: "timestamp",
+			sortDirection: "asc",
 			icons
 		};
 	},
@@ -102,11 +96,11 @@ export default {
 
 	computed: {
 		allUnits() {
-			return this.$store.getters.units;
+			return this.$store.getters.savedUnits;
 		},
 
 		sortedUnits() {
-			return this.$store.getters.sortedUnits;
+			return this.$store.getters.sortedSavedUnits(this.sortBy, this.sortDirection);
 		}
 	},
 
@@ -133,13 +127,25 @@ export default {
 		},
 
 		setSorting(sortKey) {
-			this.$store.commit("setSorting", sortKey);
+			if (this.sortBy === sortKey) {
+				this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+			} else {
+				this.sortBy = sortKey;
+				this.sortDirection = "asc";
+			}
 		},
 
 		hideEditForm() {
 			this.showEditForm = false;
 			document.querySelector("body").classList.remove("modal-open");
 		}
+	},
+	async fetch() {
+    	this.$store.dispatch("fetchUnits");
+    },
+
+	created() {
+		
 	}
 };
 </script>

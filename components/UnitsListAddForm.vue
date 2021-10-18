@@ -87,6 +87,23 @@
 					</ValidationProvider>
 				</div>
 				<div class="mb-2 text-left col-9 mx-auto">
+					<ValidationProvider
+						v-slot="{ errors, invalid }"
+						class="d-flex flex-column"
+					>
+						<label for="description">Description:</label>
+						<textarea
+							rows="3"
+							cols="33"
+							:class="{ 'border-danger': invalid, 'bg-danger': invalid }"
+							name="description"
+							id="description"
+							v-model="newUnit.description"
+						/>
+						<p class="text-danger error-message">{{ errors[0] }}</p>
+					</ValidationProvider>
+				</div>
+				<div class="mb-2 text-left col-9 mx-auto">
 					<ValidationProvider rules="required" v-slot="{ errors, invalid }">
 						<label for="date">Date:</label>
 						<input
@@ -123,6 +140,7 @@ export default {
 				distance: 0,
 				duration: 0,
 				intensity: 0,
+				description: "",
 				date: this.getCurrentDate()
 			}
 		};
@@ -136,10 +154,8 @@ export default {
 					? `0${local.getMonth() + 1}`
 					: `${local.getMonth() + 1}`;
 			let day =
-				local.getDate() < 10
-					? `0${local.getDate()}`
-					: `${local.getMonth()}`;
-				
+				local.getDate() < 10 ? `0${local.getDate()}` : `${local.getDate()}`;
+
 			return `${local.getFullYear()}-${month}-${day}`;
 		},
 
@@ -152,7 +168,7 @@ export default {
 			let id;
 			do {
 				id = Math.floor(Math.random() * 1000);
-			} while (this.$store.getters.units.find(el => el.id === id));
+			} while (this.$store.getters.savedUnits.find(el => el.id === id));
 			return id;
 		}
 	}
