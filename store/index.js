@@ -1,5 +1,5 @@
 import Vue from "vue";
-import axios from "axios";
+import { SavedUnitsService } from "../api/api.service";
 
 export const state = () => ({
 	savedUnits: [],
@@ -8,10 +8,10 @@ export const state = () => ({
 });
 
 export const actions = {
-	async fetchUnits({ commit }) {
+	async fetchSavedUnits({ commit }) {
 		commit("FETCH_START");
 		try {
-			const res = await axios.get("/api/saved-units");
+			const res = await SavedUnitsService.get();
 			const units = await res.data;
 			commit("FETCH_END", units);
 		} catch (err) {
@@ -21,10 +21,10 @@ export const actions = {
 
 	async addSavedUnit({ dispatch }, newUnit) {
 		try {
-			const res = await axios.post("/api/saved-unit", newUnit);
+			const res = await SavedUnitsService.create(newUnit);
 			const result = await res.data;
 			console.log(result);
-			dispatch("fetchUnits");
+			dispatch("fetchSavedUnits");
 		} catch (err) {
 			console.log(`Error message: ${err}`);
 		}
@@ -32,10 +32,21 @@ export const actions = {
 
 	async deleteSavedUnit({ dispatch }, id) {
 		try {
-			const res = await axios.delete(`/api/saved-units/${id}`);
+			const res = await SavedUnitsService.destroy(id);
 			const result = await res.data;
 			console.log(result);
-			dispatch("fetchUnits");
+			dispatch("fetchSavedUnits");
+		} catch (err) {
+			console.log(`Error message: ${err}`);
+		}
+	},
+
+	async editSavedUnit({ dispatch }, payload) {
+		try {
+			const res = await SavedUnitsService.update(payload.id, payload);
+			const result = await res.data;
+			console.log(result);
+			dispatch("fetchSavedUnits");
 		} catch (err) {
 			console.log(`Error message: ${err}`);
 		}

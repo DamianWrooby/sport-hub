@@ -25,7 +25,7 @@ export default {
 		},
 
 		editUnit(payload) {
-			return this.$store.commit("editUnit", payload);
+			return this.$store.dispatch("editSavedUnit", payload);
 		}
 	}
 };

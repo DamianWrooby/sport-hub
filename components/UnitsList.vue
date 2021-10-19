@@ -144,9 +144,9 @@ export default {
 			document.querySelector("body").classList.remove("modal-open");
 		}
 	},
-	
+
 	async fetch() {
-		this.$store.dispatch("fetchUnits");
+		this.$store.dispatch("fetchSavedUnits");
 	},
 
 	created() {}

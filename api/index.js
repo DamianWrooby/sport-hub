@@ -16,7 +16,16 @@ app.get("/saved-units", async (req, res) => {
 	res.json(units);
 });
 
-app.post("/saved-unit", async (req, res) => {
+app.get("/saved-units/:id", async (req, res) => {
+	const units = await prisma.savedUnits.findFirst({
+		where: {
+			id: parseInt(id)
+		}
+	});
+	res.json(units);
+});
+
+app.post("/saved-units", async (req, res) => {
 	const {
 		id,
 		activity,
@@ -50,4 +59,32 @@ app.delete(`/saved-units/:id`, async (req, res) => {
 		}
 	});
 	res.json(unit);
+});
+
+app.put("/saved-units/:id", async (req, res) => {
+	const { id } = req.params;
+	const {
+		activity,
+		distance,
+		duration,
+		intensity,
+		description,
+		date,
+		timestamp
+	} = req.body;
+	const unit = await prisma.savedUnits.update({
+		where: {
+			id: parseInt(id)
+		},
+		data: {
+			activity,
+			distance,
+			duration,
+			intensity,
+			description,
+			date,
+			timestamp
+		}
+	});
+	res.status(200).json(unit);
 });

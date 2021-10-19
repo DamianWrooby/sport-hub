@@ -178,7 +178,7 @@ export default {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, 10%);
+	transform: translate(-50%, 60%);
 	max-width: 500px;
 	z-index: 99999;
 	background-color: #2c2538;
