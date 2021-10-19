@@ -17,11 +17,11 @@ export default {
 
 	methods: {
 		addUnit(payload) {
-			return this.$store.commit("addUnit", payload);
+			return this.$store.dispatch("addSavedUnit", payload);
 		},
 
 		removeUnit(id) {
-			return this.$store.commit("removeUnit", id);
+			return this.$store.dispatch("deleteSavedUnit", id);
 		},
 
 		editUnit(payload) {

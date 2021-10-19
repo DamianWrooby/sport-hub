@@ -1,7 +1,11 @@
 <template>
 	<div class="mb-5">
 		<h2 class="py-4 mt-5">Training units</h2>
-		<units-list-table-head :sortBy="sortBy" :sortDirection="sortDirection" @setSorting="setSorting($event)" />
+		<units-list-table-head
+			:sortBy="sortBy"
+			:sortDirection="sortDirection"
+			@setSorting="setSorting($event)"
+		/>
 		<transition-group name="list" tag="ul" appear>
 			<li
 				class="list-item border rounded rounded-3 row mb-2 d-flex flex-row justify-content-between align-items-center"
@@ -140,13 +144,12 @@ export default {
 			document.querySelector("body").classList.remove("modal-open");
 		}
 	},
+	
 	async fetch() {
-    	this.$store.dispatch("fetchUnits");
-    },
+		this.$store.dispatch("fetchUnits");
+	},
 
-	created() {
-		
-	}
+	created() {}
 };
 </script>
 

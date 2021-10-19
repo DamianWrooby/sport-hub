@@ -1,4 +1,5 @@
 import Vue from "vue";
+import axios from "axios";
 
 export const state = () => ({
 	savedUnits: [],
@@ -10,11 +11,33 @@ export const actions = {
 	async fetchUnits({ commit }) {
 		commit("FETCH_START");
 		try {
-			const res = await fetch("/api/saved-units");
-			const units = await res.json();
+			const res = await axios.get("/api/saved-units");
+			const units = await res.data;
 			commit("FETCH_END", units);
 		} catch (err) {
 			console.log(err);
+		}
+	},
+
+	async addSavedUnit({ dispatch }, newUnit) {
+		try {
+			const res = await axios.post("/api/saved-unit", newUnit);
+			const result = await res.data;
+			console.log(result);
+			dispatch("fetchUnits");
+		} catch (err) {
+			console.log(`Error message: ${err}`);
+		}
+	},
+
+	async deleteSavedUnit({ dispatch }, id) {
+		try {
+			const res = await axios.delete(`/api/saved-units/${id}`);
+			const result = await res.data;
+			console.log(result);
+			dispatch("fetchUnits");
+		} catch (err) {
+			console.log(`Error message: ${err}`);
 		}
 	}
 };

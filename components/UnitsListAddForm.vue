@@ -141,7 +141,7 @@ export default {
 				duration: 0,
 				intensity: 0,
 				description: "",
-				date: this.getCurrentDate()
+				date: this.getCurrentDate(),
 			}
 		};
 	},
@@ -160,7 +160,7 @@ export default {
 		},
 
 		onAddFormSubmit() {
-			this.$emit("addUnit", { ...this.newUnit });
+			this.$emit("addUnit", { ...this.newUnit, timestamp: this.generatedTimestamp });
 			this.newUnit.id = this.generateId();
 		},
 
@@ -171,6 +171,21 @@ export default {
 			} while (this.$store.getters.savedUnits.find(el => el.id === id));
 			return id;
 		}
+	},
+
+	computed: {
+		generatedTimestamp() {
+			let dateArr = this.newUnit.date.split("-");
+			let timestamp = new Date(
+				Number(dateArr[0]),
+				Number(dateArr[1]) - 1,
+				Number(dateArr[2]),
+				0,
+				0,
+				0
+			).getTime();
+			return timestamp;
+		},
 	}
 };
 </script>
