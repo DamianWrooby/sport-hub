@@ -8,11 +8,7 @@
 				@submit.prevent="onAddFormSubmit"
 			>
 				<div class="mb-2 text-left col-9 mx-auto">
-					<ValidationProvider
-						rules="required"
-						name="activity"
-						v-slot="{ errors, invalid }"
-					>
+					<ValidationProvider rules="required" name="activity" v-slot="{ errors, invalid }">
 						<label for="activity">Activity:</label>
 						<select
 							class="form-select"
@@ -66,10 +62,7 @@
 					</ValidationProvider>
 				</div>
 				<div class="mb-2 text-left col-9 mx-auto">
-					<ValidationProvider
-						rules="required|between:0,100|integer"
-						v-slot="{ errors, invalid }"
-					>
+					<ValidationProvider rules="required|between:0,100|integer" v-slot="{ errors, invalid }">
 						<label for="intensity">Intensity:</label>
 						<input
 							type="number"
@@ -87,10 +80,7 @@
 					</ValidationProvider>
 				</div>
 				<div class="mb-2 text-left col-9 mx-auto">
-					<ValidationProvider
-						v-slot="{ errors, invalid }"
-						class="d-flex flex-column"
-					>
+					<ValidationProvider v-slot="{ errors, invalid }" class="d-flex flex-column">
 						<label for="description">Description:</label>
 						<textarea
 							rows="3"
@@ -141,7 +131,7 @@ export default {
 				duration: 0,
 				intensity: 0,
 				description: "",
-				date: this.getCurrentDate(),
+				date: this.getCurrentDate()
 			}
 		};
 	},
@@ -149,18 +139,15 @@ export default {
 	methods: {
 		getCurrentDate() {
 			let local = new Date();
-			let month =
-				local.getMonth() + 1 < 10
-					? `0${local.getMonth() + 1}`
-					: `${local.getMonth() + 1}`;
-			let day =
-				local.getDate() < 10 ? `0${local.getDate()}` : `${local.getDate()}`;
+			let month = local.getMonth() + 1 < 10 ? `0${local.getMonth() + 1}` : `${local.getMonth() + 1}`;
+			let day = local.getDate() < 10 ? `0${local.getDate()}` : `${local.getDate()}`;
 
 			return `${local.getFullYear()}-${month}-${day}`;
 		},
 
-		onAddFormSubmit() {
-			this.$emit("addUnit", { ...this.newUnit, timestamp: this.generatedTimestamp });
+		async onAddFormSubmit() {
+			const res = await this.$store.dispatch("addSavedUnit", this.newUnit);
+			res ? this.successToast('b-toaster-bottom-left', true)  : this.errorToast('b-toaster-bottom-left', true);
 			this.newUnit.id = this.generateId();
 		},
 
@@ -170,23 +157,28 @@ export default {
 				id = Math.floor(Math.random() * 1000);
 			} while (this.$store.getters.savedUnits.find(el => el.id === id));
 			return id;
+		},
+
+		successToast(toaster, append = false) {
+			this.$bvToast.toast(`Unit has been added successfully.`, {
+				title: `Success!`,
+				toaster: toaster,
+				solid: true,
+				appendToast: append,
+				variant: "success"
+			});
+		},
+
+		errorToast(toaster, append = false) {
+			this.$bvToast.toast(`Unit hasn't been added. Try again.`, {
+				title: `Error!`,
+				toaster: toaster,
+				solid: true,
+				appendToast: append,
+				variant: "danger"
+			});
 		}
 	},
-
-	computed: {
-		generatedTimestamp() {
-			let dateArr = this.newUnit.date.split("-");
-			let timestamp = new Date(
-				Number(dateArr[0]),
-				Number(dateArr[1]) - 1,
-				Number(dateArr[2]),
-				0,
-				0,
-				0
-			).getTime();
-			return timestamp;
-		},
-	}
 };
 </script>
 

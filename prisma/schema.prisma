@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -19,7 +16,7 @@ model savedUnits {
   intensity   Int
   description String?
   date        String
-  timestamp   Int
+  timestamp   String @default("none")
 }
 
 model scheduledUnits {

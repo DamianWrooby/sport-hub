@@ -26,17 +26,8 @@ app.get("/saved-units/:id", async (req, res) => {
 });
 
 app.post("/saved-units", async (req, res) => {
-	const {
-		id,
-		activity,
-		distance,
-		duration,
-		intensity,
-		description,
-		date,
-		timestamp
-	} = req.body;
-	const unit = await prisma.savedUnits.create({
+	const { id, activity, distance, duration, intensity, description, date, timestamp } = req.body;
+	const prismaResult = await prisma.savedUnits.create({
 		data: {
 			id,
 			activity,
@@ -48,7 +39,7 @@ app.post("/saved-units", async (req, res) => {
 			timestamp
 		}
 	});
-	res.status(200).json(unit);
+	res.status(200).json(prismaResult);
 });
 
 app.delete(`/saved-units/:id`, async (req, res) => {
@@ -63,15 +54,7 @@ app.delete(`/saved-units/:id`, async (req, res) => {
 
 app.put("/saved-units/:id", async (req, res) => {
 	const { id } = req.params;
-	const {
-		activity,
-		distance,
-		duration,
-		intensity,
-		description,
-		date,
-		timestamp
-	} = req.body;
+	const { activity, distance, duration, intensity, description, date, timestamp } = req.body;
 	const unit = await prisma.savedUnits.update({
 		where: {
 			id: parseInt(id)

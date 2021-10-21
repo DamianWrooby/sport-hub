@@ -1,7 +1,7 @@
 <template>
 	<div class="container text-center">
-		<units-list-add-form @addUnit="addUnit($event)" />
-		<units-list @removeUnit="removeUnit($event)" @editUnit="editUnit($event)" />
+		<units-list-add-form />
+		<units-list />
 	</div>
 </template>
 
@@ -13,20 +13,6 @@ export default {
 	components: {
 		UnitsListAddForm,
 		UnitsList
-	},
-
-	methods: {
-		addUnit(payload) {
-			return this.$store.dispatch("addSavedUnit", payload);
-		},
-
-		removeUnit(id) {
-			return this.$store.dispatch("deleteSavedUnit", id);
-		},
-
-		editUnit(payload) {
-			return this.$store.dispatch("editSavedUnit", payload);
-		}
 	}
 };
 </script>

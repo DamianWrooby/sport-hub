@@ -136,12 +136,34 @@ export default {
 	},
 
 	methods: {
-		onEditFormSubmit() {
-			this.$emit("onSave", this.editedUnit);
+		async onEditFormSubmit() {
+			this.$emit("editSaved");
+			const res = await this.$store.dispatch("editSavedUnit", this.editedUnit);
+			res ? this.successToast('b-toaster-bottom-left', true)  : this.errorToast('b-toaster-bottom-left', true);
 		},
 
 		onBackdropClick() {
 			this.$emit("backdropClicked");
+		},
+
+		successToast(toaster, append = false) {
+			this.$bvToast.toast(`Unit has been changed successfully.`, {
+				title: `Success!`,
+				toaster: toaster,
+				solid: true,
+				appendToast: append,
+				variant: "success"
+			});
+		},
+
+		errorToast(toaster, append = false) {
+			this.$bvToast.toast(`Unit hasn't been changed. Try again.`, {
+				title: `Error!`,
+				toaster: toaster,
+				solid: true,
+				appendToast: append,
+				variant: "danger"
+			});
 		}
 	},
 
@@ -175,10 +197,10 @@ export default {
 }
 
 #edit-form {
-	position: absolute;
+	position: fixed;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, 60%);
+	transform: translate(-50%, -50%);
 	max-width: 500px;
 	z-index: 99999;
 	background-color: #2c2538;

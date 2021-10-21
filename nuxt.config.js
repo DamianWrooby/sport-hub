@@ -43,7 +43,7 @@ export default {
 		"bootstrap-vue/nuxt"
 	],
 	bootstrapVue: {
-		componentPlugins: ["ModalPlugin"]
+		componentPlugins: ["ModalPlugin", "ToastPlugin"]
 	},
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build

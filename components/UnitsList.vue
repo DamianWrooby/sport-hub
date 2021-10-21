@@ -1,25 +1,16 @@
 <template>
 	<div class="mb-5">
 		<h2 class="py-4 mt-5">Training units</h2>
-		<units-list-table-head
-			:sortBy="sortBy"
-			:sortDirection="sortDirection"
-			@setSorting="setSorting($event)"
-		/>
+		<units-list-table-head :sortBy="sortBy" :sortDirection="sortDirection" @setSorting="setSorting($event)" />
 		<transition-group name="list" tag="ul" appear>
 			<li
 				class="list-item border rounded rounded-3 row mb-2 d-flex flex-row justify-content-between align-items-center"
 				v-for="unit in sortedUnits"
 				:key="unit.id"
 			>
-				<NuxtLink
-					:to="`/units/${unit.id}`"
-					class="unit-link d-flex flex-row align-items-center col-12 py-4 px-0"
-				>
+				<NuxtLink :to="`/units/${unit.id}`" class="unit-link d-flex flex-row align-items-center col-12 py-4 px-0">
 					<div class="col">
-						<span
-							><font-awesome-icon :size="'2x'" :icon="icons[unit.activity]"
-						/></span>
+						<span><font-awesome-icon :size="'2x'" :icon="icons[unit.activity]"/></span>
 					</div>
 					<div class="col">
 						<span>{{ unit.distance }} m</span>
@@ -34,16 +25,10 @@
 						<span>{{ unit.date }}</span>
 					</div>
 					<div class="col">
-						<button
-							class="btn btn-danger btn-sm"
-							@click.stop.prevent="onDeleteClick(unit.id)"
-						>
+						<button class="btn btn-danger btn-sm" @click.stop.prevent="onDeleteClick(unit.id)">
 							<font-awesome-icon :icon="icons.delete" />
 						</button>
-						<button
-							class="btn btn-info btn-sm"
-							@click.stop.prevent="onEditClick(unit.id)"
-						>
+						<button class="btn btn-info btn-sm" @click.stop.prevent="onEditClick(unit.id)">
 							<font-awesome-icon :icon="icons.edit" />
 						</button>
 					</div>
@@ -69,7 +54,7 @@
 		<units-list-edit-form
 			v-if="showEditForm"
 			:itemId="editItemId"
-			@onSave="onEditFormSave($event)"
+			@editSaved="onEditFormSave()"
 			@backdropClicked="hideEditForm"
 		/>
 	</div>
@@ -114,8 +99,9 @@ export default {
 			this.deleteItemId = id;
 		},
 
-		onDeleteConfirm(id) {
-			this.$emit("removeUnit", id);
+		async onDeleteConfirm(id) {
+			const res = await this.$store.dispatch("deleteSavedUnit", id);
+			res ? this.successToast('b-toaster-bottom-left', true)  : this.errorToast('b-toaster-bottom-left', true);
 		},
 
 		onEditClick(id) {
@@ -124,8 +110,7 @@ export default {
 			document.querySelector("body").classList.add("modal-open");
 		},
 
-		onEditFormSave(editedItem) {
-			this.$emit("editUnit", editedItem);
+		onEditFormSave() {
 			this.showEditForm = false;
 			document.querySelector("body").classList.remove("modal-open");
 		},
@@ -142,14 +127,32 @@ export default {
 		hideEditForm() {
 			this.showEditForm = false;
 			document.querySelector("body").classList.remove("modal-open");
+		},
+
+		successToast(toaster, append = false) {
+			this.$bvToast.toast(`Unit has been removed successfully.`, {
+				title: `Success!`,
+				toaster: toaster,
+				solid: true,
+				appendToast: append,
+				variant: "success"
+			});
+		},
+
+		errorToast(toaster, append = false) {
+			this.$bvToast.toast(`Unit hasn't been removed. Try again.`, {
+				title: `Error!`,
+				toaster: toaster,
+				solid: true,
+				appendToast: append,
+				variant: "danger"
+			});
 		}
 	},
 
 	async fetch() {
 		this.$store.dispatch("fetchSavedUnits");
-	},
-
-	created() {}
+	}
 };
 </script>
 

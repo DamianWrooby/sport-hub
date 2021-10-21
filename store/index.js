@@ -20,13 +20,18 @@ export const actions = {
 	},
 
 	async addSavedUnit({ dispatch }, newUnit) {
+		const dateArr = newUnit.date.split("-");
+		const timestamp = new Date(Number(dateArr[0]), Number(dateArr[1]) - 1, Number(dateArr[2]), 0, 0, 0).getTime();
+		const timestampString = timestamp.toString();
 		try {
-			const res = await SavedUnitsService.create(newUnit);
+			const res = await SavedUnitsService.create({ ...newUnit, "timestamp": timestampString });
 			const result = await res.data;
 			console.log(result);
 			dispatch("fetchSavedUnits");
+			return true;
 		} catch (err) {
 			console.log(`Error message: ${err}`);
+			return false;
 		}
 	},
 
@@ -36,8 +41,10 @@ export const actions = {
 			const result = await res.data;
 			console.log(result);
 			dispatch("fetchSavedUnits");
+			return true;
 		} catch (err) {
 			console.log(`Error message: ${err}`);
+			return false;
 		}
 	},
 
@@ -46,9 +53,12 @@ export const actions = {
 			const res = await SavedUnitsService.update(payload.id, payload);
 			const result = await res.data;
 			console.log(result);
+			// Prisma is here returning added object or page html in case of wrong api route
 			dispatch("fetchSavedUnits");
+			return true;
 		} catch (err) {
 			console.log(`Error message: ${err}`);
+			return false;
 		}
 	}
 };
@@ -57,8 +67,15 @@ export const mutations = {
 	FETCH_START(state) {
 		state.isLoading = true;
 	},
-	
+
 	FETCH_END(state, units) {
+		let {timestamp, ...y} = units;
+		const mappedUnits = units.map(unit => { 
+			const { timestamp, ...mappedUnit } = unit;
+			return ({
+				...mappedUnit, "timestamp": parseInt(unit.timestamp, 10)
+			});
+			});
 		state.savedUnits = units;
 		state.isLoading = false;
 	}
@@ -70,8 +87,7 @@ export const getters = {
 	savedUnit: state => id => [...state.savedUnits].find(unit => unit.id === id),
 
 	sortedSavedUnits: state => (sortBy, sortDirection) => {
-		const compareFn = (a, b) =>
-			a[sortBy] > b[sortBy] ? 1 : a[sortBy] < b[sortBy] ? -1 : 0;
+		const compareFn = (a, b) => (a[sortBy] > b[sortBy] ? 1 : a[sortBy] < b[sortBy] ? -1 : 0);
 		const units = [...state.savedUnits].sort(compareFn);
 
 		if (sortDirection === "desc") {
@@ -83,6 +99,5 @@ export const getters = {
 
 	scheduledUnits: state => state.scheduledUnits,
 
-	scheduledUnit: state => dayID =>
-		[...state.scheduledUnits].find(unit => unit.dayID === dayID)
+	scheduledUnit: state => dayID => [...state.scheduledUnits].find(unit => unit.dayID === dayID)
 };
