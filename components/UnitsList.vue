@@ -35,6 +35,7 @@
 				</NuxtLink>
 			</li>
 		</transition-group>
+
 		<b-modal
 			id="modal-delete"
 			v-model="showDeleteForm"
@@ -42,20 +43,20 @@
 			centered
 			ok-title="Delete"
 			ok-variant="danger"
+			:header-text-variant="'dark'"
+			:body-text-variant="'dark'"
+			:footer-text-variant="'dark'"
 			modal-header="false"
 			size="sm"
-			:body-bg-variant="'dark'"
-			:header-bg-variant="'dark'"
-			:footer-bg-variant="'dark'"
-			hide-header
+			title="Deleting unit"
 		>
 			<p class="my-4 fs-1">Are you sure?</p>
 		</b-modal>
 		<units-list-edit-form
 			v-if="showEditForm"
-			:itemId="editItemId"
-			@editSaved="onEditFormSave()"
+			:unitToEdit="editedUnit"
 			@backdropClicked="hideEditForm"
+			@onSave="onEditFormSubmit($event)"
 		/>
 	</div>
 </template>
@@ -63,9 +64,12 @@
 <script>
 import UnitsListEditForm from "./UnitsListEditForm.vue";
 import UnitsListTableHead from "./UnitsListTableHead.vue";
+import throwToast from "../mixins/throwToast";
 import { icons } from "../assets/icons.js";
 
 export default {
+	mixins: [throwToast],
+
 	data() {
 		return {
 			showDeleteForm: false,
@@ -90,6 +94,10 @@ export default {
 
 		sortedUnits() {
 			return this.$store.getters.sortedSavedUnits(this.sortBy, this.sortDirection);
+		},
+
+		editedUnit() {
+			return this.$store.getters.savedUnit(this.editItemId);
 		}
 	},
 
@@ -101,7 +109,9 @@ export default {
 
 		async onDeleteConfirm(id) {
 			const res = await this.$store.dispatch("deleteSavedUnit", id);
-			res ? this.successToast('b-toaster-bottom-left', true)  : this.errorToast('b-toaster-bottom-left', true);
+			res
+				? this.throwToast("success", "removed")
+				: this.throwToast("danger", "removed");
 		},
 
 		onEditClick(id) {
@@ -110,9 +120,18 @@ export default {
 			document.querySelector("body").classList.add("modal-open");
 		},
 
-		onEditFormSave() {
-			this.showEditForm = false;
-			document.querySelector("body").classList.remove("modal-open");
+		async onEditFormSubmit(editedUnit) {
+			try {
+				this.hideEditForm();
+				const res = await this.$store.dispatch("editSavedUnit", editedUnit);
+				res
+					? this.throwToast("success", "edited")
+					: this.throwToast("danger", "edited");
+				return true;
+			} catch (err) {
+				console.log(err);
+				return false;
+			}
 		},
 
 		setSorting(sortKey) {
@@ -128,26 +147,6 @@ export default {
 			this.showEditForm = false;
 			document.querySelector("body").classList.remove("modal-open");
 		},
-
-		successToast(toaster, append = false) {
-			this.$bvToast.toast(`Unit has been removed successfully.`, {
-				title: `Success!`,
-				toaster: toaster,
-				solid: true,
-				appendToast: append,
-				variant: "success"
-			});
-		},
-
-		errorToast(toaster, append = false) {
-			this.$bvToast.toast(`Unit hasn't been removed. Try again.`, {
-				title: `Error!`,
-				toaster: toaster,
-				solid: true,
-				appendToast: append,
-				variant: "danger"
-			});
-		}
 	},
 
 	async fetch() {

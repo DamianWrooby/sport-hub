@@ -1,15 +1,15 @@
 <template>
 	<div>
-			<div id="heading">
-				<nuxt-link to="/">
-		<transition name="heading" appear>
-					<h1 id="main-heading">Training Tracker</h1>
-		</transition>
-				</nuxt-link>
-		<transition name="sub-heading" appear>
+		<div id="heading">
+			<nuxt-link to="/">
+				<transition name="heading" appear>
+					<h1 id="main-heading">SportHub</h1>
+				</transition>
+			</nuxt-link>
+			<transition name="sub-heading" appear>
 				<p id="sub-heading">Track your physical activities</p>
-		</transition>	
-			</div>
+			</transition>
+		</div>
 	</div>
 </template>
 
@@ -19,13 +19,15 @@ export default {};
 
 <style>
 .heading-enter-active,
-.heading-leave-active, .sub-heading-enter-active,
+.heading-leave-active,
+.sub-heading-enter-active,
 .sub-heading-leave-active {
 	transition: all 0.5s;
 }
 
 .heading-enter,
-.heading-leave-to, .sub-heading-enter,
+.heading-leave-to,
+.sub-heading-enter,
 .sub-heading-leave-to {
 	opacity: 0;
 }

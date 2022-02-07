@@ -9,4 +9,5 @@ export const icons = {
 	edit: ['fas', 'edit'],
 	angleUp: ['fas', 'angle-up'],
 	angleDown: ['fas', 'angle-down'],
+	edit: ['fas', 'edit']
 }

@@ -116,8 +116,12 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
+import throwToast from "~/mixins/throwToast";
+import generateID from '~/mixins/generateID';
 
 export default {
+	mixins: [throwToast, generateID],
+
 	components: {
 		ValidationObserver,
 		ValidationProvider
@@ -125,7 +129,7 @@ export default {
 	data() {
 		return {
 			newUnit: {
-				id: this.generateId(),
+				id: this.generateID(this.$store.getters.savedUnits),
 				activity: "running",
 				distance: 0,
 				duration: 0,
@@ -147,37 +151,9 @@ export default {
 
 		async onAddFormSubmit() {
 			const res = await this.$store.dispatch("addSavedUnit", this.newUnit);
-			res ? this.successToast('b-toaster-bottom-left', true)  : this.errorToast('b-toaster-bottom-left', true);
-			this.newUnit.id = this.generateId();
+			res ? this.throwToast("success", "added")  : this.throwToast("danger", "added");
+			this.newUnit.id = this.generateID(this.$store.getters.savedUnits);
 		},
-
-		generateId() {
-			let id;
-			do {
-				id = Math.floor(Math.random() * 1000);
-			} while (this.$store.getters.savedUnits.find(el => el.id === id));
-			return id;
-		},
-
-		successToast(toaster, append = false) {
-			this.$bvToast.toast(`Unit has been added successfully.`, {
-				title: `Success!`,
-				toaster: toaster,
-				solid: true,
-				appendToast: append,
-				variant: "success"
-			});
-		},
-
-		errorToast(toaster, append = false) {
-			this.$bvToast.toast(`Unit hasn't been added. Try again.`, {
-				title: `Error!`,
-				toaster: toaster,
-				solid: true,
-				appendToast: append,
-				variant: "danger"
-			});
-		}
 	},
 };
 </script>

@@ -11,7 +11,8 @@ import ScheduleDate from "../components/ScheduleDate.vue";
 
 export default {
 	components: {
-		ScheduleTable
+		ScheduleTable,
+		ScheduleDate
 	}
 };
 </script>

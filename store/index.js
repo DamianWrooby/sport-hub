@@ -3,7 +3,232 @@ import { SavedUnitsService } from "../api/api.service";
 
 export const state = () => ({
 	savedUnits: [],
-	scheduledUnits: [],
+	scheduledUnits: [
+		{
+			dayID: "mon-1",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "tue-1",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "wed-1",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "thu-1",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "fri-1",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "sat-1",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "sun-1",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "mon-2",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "tue-2",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "wed-2",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "thu-2",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "fri-2",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "sat-2",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "sun-2",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "mon-3",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "tue-3",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "wed-3",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "thu-3",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "fri-3",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "sat-3",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "sun-3",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "mon-4",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "tue-4",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "wed-4",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "thu-4",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "fri-4",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "sat-4",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		},
+		{
+			dayID: "sun-4",
+			activity: "running",
+			distance: 5,
+			duration: 40,
+			intensity: 60,
+			description: ""
+		}
+	],
 	isLoading: false
 });
 
@@ -60,7 +285,17 @@ export const actions = {
 			console.log(`Error message: ${err}`);
 			return false;
 		}
-	}
+	},
+	
+	async editScheduledUnit({ commit }, payload) {
+		try {
+			commit("EDIT_SCHEDULED_UNIT", payload);
+			return payload;
+		} catch (err) {
+			console.log(`Error message: ${err}`);
+			return false;
+		}
+	},
 };
 
 export const mutations = {
@@ -78,6 +313,11 @@ export const mutations = {
 			});
 		state.savedUnits = units;
 		state.isLoading = false;
+	},
+
+	EDIT_SCHEDULED_UNIT(state, payload) {
+		let index = state.scheduledUnits.findIndex(unit => unit.dayID === payload.dayID);
+		Vue.set(state.scheduledUnits, index, payload);
 	}
 };
 

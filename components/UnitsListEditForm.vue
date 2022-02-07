@@ -8,11 +8,7 @@
 				@submit.prevent="onEditFormSubmit"
 			>
 				<div class="mb-3 text-left col-9 mx-auto">
-					<ValidationProvider
-						rules="required"
-						name="activity"
-						v-slot="{ errors, invalid }"
-					>
+					<ValidationProvider rules="required" name="activity" v-slot="{ errors, invalid }">
 						<label for="activity">Activity:</label>
 						<select
 							class="form-select"
@@ -64,10 +60,7 @@
 					</ValidationProvider>
 				</div>
 				<div class="mb-3 text-left col-9 mx-auto">
-					<ValidationProvider
-						rules="required|between:0,100|integer"
-						v-slot="{ errors, invalid }"
-					>
+					<ValidationProvider rules="required|between:0,100|integer" v-slot="{ errors, invalid }">
 						<label for="intensity">Intensity:</label>
 						<input
 							type="number"
@@ -83,11 +76,8 @@
 						<p class="text-danger error-message">{{ errors[0] }}</p>
 					</ValidationProvider>
 				</div>
-				<div class="mb-2 text-left col-9 mx-auto">
-					<ValidationProvider
-						v-slot="{ errors, invalid }"
-						class="d-flex flex-column"
-					>
+				<div class="mb-2 text-left col-9 mx-auto" v-if="editedUnit.description">
+					<ValidationProvider v-slot="{ errors, invalid }" class="d-flex flex-column">
 						<label for="description">Description:</label>
 						<textarea
 							rows="3"
@@ -100,7 +90,7 @@
 						<p class="text-danger error-message">{{ errors[0] }}</p>
 					</ValidationProvider>
 				</div>
-				<div class="mb-3 text-left col-9 mx-auto">
+				<div class="mb-3 text-left col-9 mx-auto" v-if="editedUnit.date">
 					<ValidationProvider rules="required" v-slot="{ errors, invalid }">
 						<label for="date">Date:</label>
 						<input
@@ -124,53 +114,32 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
+import throwToast from "../mixins/throwToast";
 
 export default {
+	mixins: [throwToast],
+	
+	data() {
+		return {
+			editedUnit: { ...this.unitToEdit }
+		};
+	},
+
 	components: {
 		ValidationObserver,
 		ValidationProvider
 	},
 
-	props: {
-		itemId: Number
-	},
+	props: ["unitToEdit"],
 
 	methods: {
-		async onEditFormSubmit() {
-			this.$emit("editSaved");
-			const res = await this.$store.dispatch("editSavedUnit", this.editedUnit);
-			res ? this.successToast('b-toaster-bottom-left', true)  : this.errorToast('b-toaster-bottom-left', true);
+		onEditFormSubmit() {
+			this.$emit("onSave", this.editedUnit);
 		},
 
 		onBackdropClick() {
 			this.$emit("backdropClicked");
 		},
-
-		successToast(toaster, append = false) {
-			this.$bvToast.toast(`Unit has been changed successfully.`, {
-				title: `Success!`,
-				toaster: toaster,
-				solid: true,
-				appendToast: append,
-				variant: "success"
-			});
-		},
-
-		errorToast(toaster, append = false) {
-			this.$bvToast.toast(`Unit hasn't been changed. Try again.`, {
-				title: `Error!`,
-				toaster: toaster,
-				solid: true,
-				appendToast: append,
-				variant: "danger"
-			});
-		}
-	},
-
-	computed: {
-		editedUnit() {
-			return JSON.parse(JSON.stringify(this.$store.getters.savedUnit(this.itemId)));
-		}
 	}
 };
 </script>
