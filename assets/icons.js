@@ -5,9 +5,10 @@ export const icons = {
 	swimming: ["fas", "swimmer"],
 	hiking: ["fas", "mountain"],
 	gym: ["fas", "dumbbell"],
-	delete: ['fas', 'trash-alt'],
-	edit: ['fas', 'edit'],
-	angleUp: ['fas', 'angle-up'],
-	angleDown: ['fas', 'angle-down'],
-	edit: ['fas', 'edit']
-}
+	delete: ["fas", "trash-alt"],
+	edit: ["fas", "edit"],
+	angleUp: ["fas", "angle-up"],
+	angleDown: ["fas", "angle-down"],
+	edit: ["fas", "edit"],
+	plus: ["fas", "plus"]
+};

@@ -149,15 +149,14 @@ export default {
 			return `${local.getFullYear()}-${month}-${day}`;
 		},
 
-		async onAddFormSubmit() {
+		onAddFormSubmit() {
 			const convertedDate = this.convertToIsoDate(this.newUnit.date);
 			const timestamp = this.convertToTimestamp(this.newUnit.date);
 			const { date, ...newUnit } = this.newUnit;
 			newUnit.date = convertedDate;
 			newUnit.timestamp = timestamp;
 
-			const res = await this.$store.dispatch("addCompletedUnit", newUnit);
-			res ? this.throwToast("success", "added") : this.throwToast("danger", "added");
+			this.$emit("onSave", newUnit);
 		},
 
 		onBackdropClick() {

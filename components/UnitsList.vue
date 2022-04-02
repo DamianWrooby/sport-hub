@@ -1,6 +1,11 @@
 <template>
 	<div class="mb-5">
-		<h2 class="py-4 mt-5">Training units</h2>
+		<div class="row col-12 justify-content-center align-items-center mb-4">
+			<h2 class="m-0">Completed units</h2>
+			<button class="add-button btn rounded-circle btn-sm ml-2" title="Add unit" @click.stop.prevent="onAddClick">
+				<font-awesome-icon :icon="icons.plus" />
+			</button>
+		</div>
 		<units-list-table-head :sortBy="sortBy" :sortDirection="sortDirection" @setSorting="setSorting($event)" />
 		<transition-group name="list" tag="ul" appear>
 			<li
@@ -56,13 +61,15 @@
 			v-if="showEditForm"
 			:unitToEdit="editedUnit"
 			@backdropClicked="hideEditForm"
-			@onSave="onEditFormSubmit($event)"
+			@onSave="onEditFormSubmit"
 		/>
+		<units-list-add-form v-if="showAddForm" @backdropClicked="hideAddForm" @onSave="onAddFormSubmit" />
 	</div>
 </template>
 
 <script>
 import UnitsListEditForm from "./UnitsListEditForm.vue";
+import UnitsListAddForm from "./UnitsListAddForm.vue";
 import UnitsListTableHead from "./UnitsListTableHead.vue";
 import throwToast from "../mixins/throwToast";
 import convertDate from "../mixins/convertDate";
@@ -76,6 +83,7 @@ export default {
 			showDeleteForm: false,
 			deleteItemId: null,
 			showEditForm: false,
+			showAddForm: false,
 			editItemId: null,
 			sortBy: "timestamp",
 			sortDirection: "asc",
@@ -85,6 +93,7 @@ export default {
 
 	components: {
 		UnitsListEditForm,
+		UnitsListAddForm,
 		UnitsListTableHead
 	},
 
@@ -119,6 +128,11 @@ export default {
 			document.querySelector("body").classList.add("modal-open");
 		},
 
+		onAddClick() {
+			this.showAddForm = true;
+			document.querySelector("body").classList.add("modal-open");
+		},
+
 		async onEditFormSubmit(editedUnit) {
 			try {
 				this.hideEditForm();
@@ -126,7 +140,20 @@ export default {
 				res ? this.throwToast("success", "edited") : this.throwToast("danger", "edited");
 				return true;
 			} catch (err) {
-				console.log(err);
+				console.warn(err);
+				return false;
+			}
+		},
+
+		async onAddFormSubmit(newUnit) {
+			try {
+				const res = await this.$store.dispatch("addCompletedUnit", newUnit);
+				res ? this.throwToast("success", "added") : this.throwToast("danger", "added");
+				this.hideAddForm();
+
+				return true;
+			} catch (err) {
+				console.warn(err);
 				return false;
 			}
 		},
@@ -143,6 +170,11 @@ export default {
 		hideEditForm() {
 			this.showEditForm = false;
 			document.querySelector("body").classList.remove("modal-open");
+		},
+
+		hideAddForm() {
+			this.showAddForm = false;
+			document.querySelector("body").classList.remove("modal-open");
 		}
 	},
 
@@ -157,6 +189,18 @@ ul {
 	position: relative;
 	margin: 0;
 	padding: 0;
+}
+
+.add-button {
+	width: 30px;
+	height: 30px;
+	background-color: rgb(51, 175, 100);
+	color: #fff;
+}
+
+.add-button:hover {
+	background-color: rgb(44, 146, 85);
+	color: #fff;
 }
 
 .list-item {
