@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import ScheduleTable from "../components/ScheduleTable.vue";
-import ScheduleDate from "../components/ScheduleDate.vue";
+import ScheduleTable from "../../components/ScheduleTable.vue";
+import ScheduleDate from "../../components/ScheduleDate.vue";
 
 export default {
 	components: {

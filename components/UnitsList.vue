@@ -5,7 +5,7 @@
 		<transition-group name="list" tag="ul" appear>
 			<li
 				class="list-item border rounded rounded-3 row mb-2 d-flex flex-row justify-content-between align-items-center"
-				v-for="unit in sortedUnits(sortBy, sortDirection)"
+				v-for="unit in sortedUnits"
 				:key="unit.id"
 			>
 				<NuxtLink :to="`/units/${unit.id}`" class="unit-link d-flex flex-row align-items-center col-12 py-4 px-0">
@@ -93,11 +93,11 @@ export default {
 			return this.$store.getters.completedUnits;
 		},
 
-		sortedUnits(sortBy, sortDirection) {
-			return this.$store.getters.sortedCompletedUnits(sortBy, sortDirection);
+		sortedUnits() {
+			return this.$store.getters.sortedCompletedUnits(this.sortBy, this.sortDirection);
 		},
 
-		editedUnit(id) {
+		editedUnit() {
 			return this.$store.getters.completedUnit(this.editItemId);
 		}
 	},
