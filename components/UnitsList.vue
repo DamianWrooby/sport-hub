@@ -5,7 +5,7 @@
 		<transition-group name="list" tag="ul" appear>
 			<li
 				class="list-item border rounded rounded-3 row mb-2 d-flex flex-row justify-content-between align-items-center"
-				v-for="unit in sortedUnits"
+				v-for="unit in sortedUnits(sortBy, sortDirection)"
 				:key="unit.id"
 			>
 				<NuxtLink :to="`/units/${unit.id}`" class="unit-link d-flex flex-row align-items-center col-12 py-4 px-0">
@@ -22,7 +22,7 @@
 						<span>{{ unit.intensity }} %</span>
 					</div>
 					<div class="col">
-						<span>{{ unit.date }}</span>
+						<span>{{ convertToSimpleDate(unit.date) }}</span>
 					</div>
 					<div class="col">
 						<button class="btn btn-danger btn-sm" @click.stop.prevent="onDeleteClick(unit.id)">
@@ -65,10 +65,11 @@
 import UnitsListEditForm from "./UnitsListEditForm.vue";
 import UnitsListTableHead from "./UnitsListTableHead.vue";
 import throwToast from "../mixins/throwToast";
+import convertDate from "../mixins/convertDate";
 import { icons } from "../assets/icons.js";
 
 export default {
-	mixins: [throwToast],
+	mixins: [throwToast, convertDate],
 
 	data() {
 		return {
@@ -89,15 +90,15 @@ export default {
 
 	computed: {
 		allUnits() {
-			return this.$store.getters.savedUnits;
+			return this.$store.getters.completedUnits;
 		},
 
-		sortedUnits() {
-			return this.$store.getters.sortedSavedUnits(this.sortBy, this.sortDirection);
+		sortedUnits(sortBy, sortDirection) {
+			return this.$store.getters.sortedCompletedUnits(sortBy, sortDirection);
 		},
 
-		editedUnit() {
-			return this.$store.getters.savedUnit(this.editItemId);
+		editedUnit(id) {
+			return this.$store.getters.completedUnit(this.editItemId);
 		}
 	},
 
@@ -108,10 +109,8 @@ export default {
 		},
 
 		async onDeleteConfirm(id) {
-			const res = await this.$store.dispatch("deleteSavedUnit", id);
-			res
-				? this.throwToast("success", "removed")
-				: this.throwToast("danger", "removed");
+			const res = await this.$store.dispatch("deleteCompletedUnit", id);
+			res ? this.throwToast("success", "removed") : this.throwToast("danger", "removed");
 		},
 
 		onEditClick(id) {
@@ -123,10 +122,8 @@ export default {
 		async onEditFormSubmit(editedUnit) {
 			try {
 				this.hideEditForm();
-				const res = await this.$store.dispatch("editSavedUnit", editedUnit);
-				res
-					? this.throwToast("success", "edited")
-					: this.throwToast("danger", "edited");
+				const res = await this.$store.dispatch("editCompletedUnit", editedUnit);
+				res ? this.throwToast("success", "edited") : this.throwToast("danger", "edited");
 				return true;
 			} catch (err) {
 				console.log(err);
@@ -146,11 +143,11 @@ export default {
 		hideEditForm() {
 			this.showEditForm = false;
 			document.querySelector("body").classList.remove("modal-open");
-		},
+		}
 	},
 
 	async fetch() {
-		this.$store.dispatch("fetchSavedUnits");
+		this.$store.dispatch("fetchCompletedUnits");
 	}
 };
 </script>

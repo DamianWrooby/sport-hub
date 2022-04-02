@@ -3,7 +3,7 @@
 		<ValidationObserver v-slot="{ invalid }">
 			<form
 				id="add-form"
-				class="border px-3 py-5 rounded rounded-3 text-center"
+				class="border px-3 py-5 rounded rounded-3 text-center col-md-9 mx-auto"
 				:class="{ 'border-danger': invalid }"
 				@submit.prevent="onAddFormSubmit"
 			>
@@ -111,16 +111,17 @@
 				<input type="submit" class="btn submit" value="Add" :disabled="invalid" />
 			</form>
 		</ValidationObserver>
+		<div class="modal-fader" @click="onBackdropClick"></div>
 	</div>
 </template>
 
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import throwToast from "~/mixins/throwToast";
-import generateID from '~/mixins/generateID';
+import convertDate from "~/mixins/convertDate";
 
 export default {
-	mixins: [throwToast, generateID],
+	mixins: [throwToast, convertDate],
 
 	components: {
 		ValidationObserver,
@@ -129,7 +130,6 @@ export default {
 	data() {
 		return {
 			newUnit: {
-				id: this.generateID(this.$store.getters.savedUnits),
 				activity: "running",
 				distance: 0,
 				duration: 0,
@@ -142,28 +142,59 @@ export default {
 
 	methods: {
 		getCurrentDate() {
-			let local = new Date();
-			let month = local.getMonth() + 1 < 10 ? `0${local.getMonth() + 1}` : `${local.getMonth() + 1}`;
-			let day = local.getDate() < 10 ? `0${local.getDate()}` : `${local.getDate()}`;
+			const local = new Date();
+			const month = local.getMonth() + 1 < 10 ? `0${local.getMonth() + 1}` : `${local.getMonth() + 1}`;
+			const day = local.getDate() < 10 ? `0${local.getDate()}` : `${local.getDate()}`;
 
 			return `${local.getFullYear()}-${month}-${day}`;
 		},
 
 		async onAddFormSubmit() {
-			const res = await this.$store.dispatch("addSavedUnit", this.newUnit);
-			res ? this.throwToast("success", "added")  : this.throwToast("danger", "added");
-			this.newUnit.id = this.generateID(this.$store.getters.savedUnits);
+			const convertedDate = this.convertToIsoDate(this.newUnit.date);
+			const timestamp = this.convertToTimestamp(this.newUnit.date);
+			const { date, ...newUnit } = this.newUnit;
+			newUnit.date = convertedDate;
+			newUnit.timestamp = timestamp;
+
+			const res = await this.$store.dispatch("addCompletedUnit", newUnit);
+			res ? this.throwToast("success", "added") : this.throwToast("danger", "added");
 		},
-	},
+
+		onBackdropClick() {
+			this.$emit("backdropClicked");
+		}
+	}
 };
 </script>
 
 <style>
+.modal-fader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 99998;
+	background: rgba(0, 0, 0, 0.8);
+}
+
 #add-form-container {
-	max-width: 500px;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
 #add-form {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 500px;
+	z-index: 99999;
 	background-color: #2c2538;
 }
 

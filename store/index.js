@@ -1,8 +1,8 @@
 import Vue from "vue";
-import { SavedUnitsService } from "../api/api.service";
+import { CompletedUnitsService } from "../api/api.service";
 
 export const state = () => ({
-	savedUnits: [],
+	completedUnits: [],
 	scheduledUnits: [
 		{
 			dayID: "mon-1",
@@ -233,10 +233,10 @@ export const state = () => ({
 });
 
 export const actions = {
-	async fetchSavedUnits({ commit }) {
+	async fetchCompletedUnits({ commit }) {
 		commit("FETCH_START");
 		try {
-			const res = await SavedUnitsService.get();
+			const res = await CompletedUnitsService.get();
 			const units = await res.data;
 			commit("FETCH_END", units);
 		} catch (err) {
@@ -244,15 +244,12 @@ export const actions = {
 		}
 	},
 
-	async addSavedUnit({ dispatch }, newUnit) {
-		const dateArr = newUnit.date.split("-");
-		const timestamp = new Date(Number(dateArr[0]), Number(dateArr[1]) - 1, Number(dateArr[2]), 0, 0, 0).getTime();
-		const timestampString = timestamp.toString();
+	async addCompletedUnit({ dispatch }, newUnit) {
 		try {
-			const res = await SavedUnitsService.create({ ...newUnit, "timestamp": timestampString });
+			const res = await CompletedUnitsService.create({ ...newUnit });
 			const result = await res.data;
 			console.log(result);
-			dispatch("fetchSavedUnits");
+			dispatch("fetchCompletedUnits");
 			return true;
 		} catch (err) {
 			console.log(`Error message: ${err}`);
@@ -260,12 +257,12 @@ export const actions = {
 		}
 	},
 
-	async deleteSavedUnit({ dispatch }, id) {
+	async deleteCompletedUnit({ dispatch }, id) {
 		try {
-			const res = await SavedUnitsService.destroy(id);
+			const res = await CompletedUnitsService.destroy(id);
 			const result = await res.data;
 			console.log(result);
-			dispatch("fetchSavedUnits");
+			dispatch("fetchCompletedUnits");
 			return true;
 		} catch (err) {
 			console.log(`Error message: ${err}`);
@@ -273,20 +270,20 @@ export const actions = {
 		}
 	},
 
-	async editSavedUnit({ dispatch }, payload) {
+	async editCompletedUnit({ dispatch }, payload) {
 		try {
-			const res = await SavedUnitsService.update(payload.id, payload);
+			const res = await CompletedUnitsService.update(payload.id, payload);
 			const result = await res.data;
 			console.log(result);
 			// Prisma is here returning added object or page html in case of wrong api route
-			dispatch("fetchSavedUnits");
+			dispatch("fetchCompletedUnits");
 			return true;
 		} catch (err) {
 			console.log(`Error message: ${err}`);
 			return false;
 		}
 	},
-	
+
 	async editScheduledUnit({ commit }, payload) {
 		try {
 			commit("EDIT_SCHEDULED_UNIT", payload);
@@ -295,7 +292,7 @@ export const actions = {
 			console.log(`Error message: ${err}`);
 			return false;
 		}
-	},
+	}
 };
 
 export const mutations = {
@@ -304,14 +301,15 @@ export const mutations = {
 	},
 
 	FETCH_END(state, units) {
-		let {timestamp, ...y} = units;
-		const mappedUnits = units.map(unit => { 
+		let { timestamp, ...y } = units;
+		const mappedUnits = units.map(unit => {
 			const { timestamp, ...mappedUnit } = unit;
-			return ({
-				...mappedUnit, "timestamp": parseInt(unit.timestamp, 10)
-			});
-			});
-		state.savedUnits = units;
+			return {
+				...mappedUnit,
+				timestamp: parseInt(unit.timestamp, 10)
+			};
+		});
+		state.completedUnits = units;
 		state.isLoading = false;
 	},
 
@@ -322,13 +320,13 @@ export const mutations = {
 };
 
 export const getters = {
-	savedUnits: state => state.savedUnits,
+	completedUnits: state => state.completedUnits,
 
-	savedUnit: state => id => [...state.savedUnits].find(unit => unit.id === id),
+	completedUnit: state => id => [...state.completedUnits].find(unit => unit.id === id),
 
-	sortedSavedUnits: state => (sortBy, sortDirection) => {
+	sortedCompletedUnits: state => (sortBy, sortDirection) => {
 		const compareFn = (a, b) => (a[sortBy] > b[sortBy] ? 1 : a[sortBy] < b[sortBy] ? -1 : 0);
-		const units = [...state.savedUnits].sort(compareFn);
+		const units = [...state.completedUnits].sort(compareFn);
 
 		if (sortDirection === "desc") {
 			units.reverse();

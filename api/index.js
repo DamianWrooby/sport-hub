@@ -11,13 +11,13 @@ export default {
 	handler: app
 };
 
-app.get("/saved-units", async (req, res) => {
-	const units = await prisma.savedUnits.findMany();
+app.get("/completed-units", async (req, res) => {
+	const units = await prisma.completedUnits.findMany();
 	res.json(units);
 });
 
-app.get("/saved-units/:id", async (req, res) => {
-	const units = await prisma.savedUnits.findFirst({
+app.get("/completed-units/:id", async (req, res) => {
+	const units = await prisma.completedUnits.findFirst({
 		where: {
 			id: parseInt(id)
 		}
@@ -25,9 +25,9 @@ app.get("/saved-units/:id", async (req, res) => {
 	res.json(units);
 });
 
-app.post("/saved-units", async (req, res) => {
+app.post("/completed-units", async (req, res) => {
 	const { id, activity, distance, duration, intensity, description, date, timestamp } = req.body;
-	const prismaResult = await prisma.savedUnits.create({
+	const prismaResult = await prisma.completedUnits.create({
 		data: {
 			id,
 			activity,
@@ -42,9 +42,9 @@ app.post("/saved-units", async (req, res) => {
 	res.status(200).json(prismaResult);
 });
 
-app.delete(`/saved-units/:id`, async (req, res) => {
+app.delete(`/completed-units/:id`, async (req, res) => {
 	const { id } = req.params;
-	const unit = await prisma.savedUnits.delete({
+	const unit = await prisma.completedUnits.delete({
 		where: {
 			id: parseInt(id)
 		}
@@ -52,10 +52,10 @@ app.delete(`/saved-units/:id`, async (req, res) => {
 	res.json(unit);
 });
 
-app.put("/saved-units/:id", async (req, res) => {
+app.put("/completed-units/:id", async (req, res) => {
 	const { id } = req.params;
 	const { activity, distance, duration, intensity, description, date, timestamp } = req.body;
-	const unit = await prisma.savedUnits.update({
+	const unit = await prisma.completedUnits.update({
 		where: {
 			id: parseInt(id)
 		},

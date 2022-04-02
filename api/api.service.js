@@ -33,20 +33,20 @@ export const ApiService = {
 
 ApiService.init();
 
-export const SavedUnitsService = {
+export const CompletedUnitsService = {
 	get(id) {
-		return ApiService.get("saved-units", id);
+		return ApiService.get("completed-units", id);
 	},
 
 	create(params) {
-		return ApiService.post("saved-units", params);
+		return ApiService.post("completed-units", params);
 	},
 
 	update(id, params) {
-		return ApiService.update(`saved-units/${id}`, params);
+		return ApiService.update(`completed-units/${id}`, params);
 	},
 
 	destroy(id) {
-		return ApiService.delete(`saved-units/${id}`);
+		return ApiService.delete(`completed-units/${id}`);
 	}
 };

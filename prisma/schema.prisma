@@ -8,19 +8,20 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model savedUnits {
-  id          Int     @id @unique
+model completedUnits {
+  id          Int     @id @unique @default(autoincrement())
   activity    String
   distance    Int
   duration    Int
   intensity   Int
   description String?
-  date        String
+  date        DateTime
   timestamp   String @default("none")
 }
 
 model scheduledUnits {
-  dayID       String  @id @unique
+  id          Int     @id @unique @default(autoincrement())
+  dayID       String  
   activity    String
   distance    Int
   duration    Int

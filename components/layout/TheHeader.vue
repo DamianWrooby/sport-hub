@@ -13,11 +13,24 @@
 	</div>
 </template>
 
-<script>
-export default {};
-</script>
-
 <style>
+h1#main-heading {
+	font-family: "Raleway";
+	font-weight: 900;
+	font-size: 85px;
+	padding: 50px 0;
+}
+
+#sub-heading {
+	position: relative;
+	font-family: "Montserrat";
+	font-weight: 400;
+	text-transform: uppercase;
+	top: -58px;
+	letter-spacing: 4px;
+	color: #9a88e4;
+}
+
 .heading-enter-active,
 .heading-leave-active,
 .sub-heading-enter-active,

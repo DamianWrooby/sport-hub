@@ -99,7 +99,7 @@
 							:class="{ 'border-danger': invalid, 'bg-danger': invalid }"
 							name="date"
 							id="date"
-							v-model="editedUnit.date"
+							v-model="editedUnit.simpleDate"
 							required
 						/>
 						<p class="text-danger error-message">{{ errors[0] }}</p>
@@ -115,13 +115,14 @@
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import throwToast from "../mixins/throwToast";
+import convertDate from "../mixins/convertDate";
 
 export default {
-	mixins: [throwToast],
-	
+	mixins: [throwToast, convertDate],
+
 	data() {
 		return {
-			editedUnit: { ...this.unitToEdit }
+			editedUnit: { ...this.unitToEdit, simpleDate: this.convertToSimpleDate(this.unitToEdit.date, true) }
 		};
 	},
 
@@ -130,16 +131,23 @@ export default {
 		ValidationProvider
 	},
 
-	props: ["unitToEdit"],
+	props: {
+		unitToEdit: {
+			type: Object,
+			required: true
+		}
+	},
 
 	methods: {
 		onEditFormSubmit() {
-			this.$emit("onSave", this.editedUnit);
+			const { date, ...finalUnit } = this.editedUnit;
+			finalUnit.date = this.convertToIsoDate(this.editedUnit.simpleDate);
+			this.$emit("onSave", finalUnit);
 		},
 
 		onBackdropClick() {
 			this.$emit("backdropClicked");
-		},
+		}
 	}
 };
 </script>
