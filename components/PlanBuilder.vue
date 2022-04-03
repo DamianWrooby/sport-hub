@@ -1,6 +1,6 @@
 <template>
 	<div class="plan-builder-container">
-		<h2 class="pb-2">Set up a plan skeleton</h2>
+		<h2 class="pb-2">Create a skeleton of the plan</h2>
 		<plan-builder-macrocycle v-model="newMacrocycle.mesocyclesNumber" />
 		<plan-builder-mesocycles
 			:mesocyclesNumber="newMacrocycle.mesocyclesNumber"
