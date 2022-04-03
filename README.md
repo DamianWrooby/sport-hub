@@ -1,5 +1,7 @@
 # SportHub
 
+This is an early stage application with a few ready features that allows you to manage your sport activity by providing tools to create plans and schedule training units. I wanted to explore Vue.js environment and try out Prisma with MySQL database.
+
 ## Screenshots
 
 ![](https://github.com/DamianWrooby/sport-hub/tree/master/static/screenshots/Screenshot_1.jpg)
